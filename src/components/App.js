@@ -6,11 +6,12 @@ import NavBar from "./NavBar";
 import ButtonAdd from "./ButtonAdd";
 import { Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
+//API: "COVID-19" from api-sports
 import Covid19 from "../util/Covid19";
 
 const useStyles = makeStyles(() => ({
   dropDownStyles: {
-    marginRight: "5px",
+    margin: "5px",
   },
   hideListStyle: {
     display: "none",
@@ -19,29 +20,32 @@ const useStyles = makeStyles(() => ({
 
 function App() {
   const [countryStats1, setCountryStats1] = useState({});
-  const [countryStats2, setCountryStats2] = useState([]);
+  const [countryStats2, setCountryStats2] = useState({});
   const [countryList, setCountryList] = useState([]);
   const [isHidden, setIsHidden] = useState(true);
 
   const classes = useStyles();
 
   const getStats = async (country, inputId) => {
+    const searchResults = await Covid19.search(country);
+    //Change the null value to 0
+    searchResults[0].cases.new = searchResults[0].cases.new || 0;
+    searchResults[0].tests.total = searchResults[0].tests.total || 0;
+
     if (inputId === 1) {
-      const searchResults = await Covid19.search(country);
       setCountryStats1(searchResults[0]);
     }
 
     if (inputId === 2) {
-      const searchResults = await Covid19.search(country);
       setCountryStats2(searchResults[0]);
     }
   };
 
-  useEffect(async () => {
+  useEffect(() => {
     async function fetchList() {
       setCountryList(await Covid19.getCountryList());
     }
-    await fetchList();
+    fetchList();
   }, []);
 
   return (
@@ -84,7 +88,14 @@ function App() {
         <Grid item container direction="row" justify="center">
           {countryStats1.country && (
             <Grid item xs={12} sm={6}>
-              <CountryCard countryStats={countryStats1} />
+              {countryStats2 ? (
+                <CountryCard
+                  countryStats={countryStats1}
+                  countryStatsOther={countryStats2}
+                />
+              ) : (
+                <CountryCard countryStats={countryStats1} />
+              )}
             </Grid>
           )}
           {countryStats2.country && (

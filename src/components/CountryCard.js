@@ -20,6 +20,7 @@ export default function CountryCard(props) {
     day,
     tests: { total },
   } = props.countryStats;
+
   return (
     <Card className={classes.root}>
       <CardContent>
@@ -34,7 +35,14 @@ export default function CountryCard(props) {
         >
           Cases
         </Typography>
-        <CasesList countryStats={props.countryStats} />
+        {props.countryStatsOther ? (
+          <CasesList
+            countryStats={props.countryStats}
+            countryStatsOther={props.countryStatsOther}
+          />
+        ) : (
+          <CasesList countryStats={props.countryStats} countryStatsOther={{}} />
+        )}
         <Typography
           className={classes.pos}
           variant="subtitle2"
@@ -42,10 +50,21 @@ export default function CountryCard(props) {
         >
           Deaths
         </Typography>
-        <DeathsList countryStats={props.countryStats} />
+        {props.countryStatsOther ? (
+          <DeathsList
+            countryStats={props.countryStats}
+            countryStatsOther={props.countryStatsOther}
+          />
+        ) : (
+          <DeathsList
+            countryStats={props.countryStats}
+            countryStatsOther={{}}
+          />
+        )}
         <Typography className={classes.pos} variant="subtitle2">
           Tests administered: {total}
         </Typography>
+
         <br />
         <Typography variant="caption" display="block" gutterBottom>
           Results updated on {day}

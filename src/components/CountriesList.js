@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Select, InputLabel, FormControl, MenuItem } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
@@ -19,9 +19,6 @@ const CountriesList = (props) => {
   //handle onChange by setting the selcted country and calling the search function from props
   const handleChange = async (e) => {
     setSelectedCountry(e.target.value);
-    console.log(`handle change -selected country state- :`, {
-      selectedCountry,
-    });
     await props.getStats(e.target.value, props.inputId);
   };
 
